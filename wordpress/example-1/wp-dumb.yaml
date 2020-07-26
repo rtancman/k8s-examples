@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: meu-blog
+  labels:
+    app: wordpress
+spec:
+  containers:
+  - name: meu-blog-wp-1
+    image: wordpress:php7.2-fpm
+    ports:
+    - containerPort: 9000

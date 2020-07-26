@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meu-blog-escalavel
+  labels:
+    app: wordpress-escalavel
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress-escalavel
+  template:
+    metadata:
+      labels:
+        app: wordpress-escalavel
+    spec:
+      containers:
+      - name: wordpress
+        image: wordpress:5.4.2-php7.2-apache
+        env:
+        - name: WORDPRESS_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: meu-blog-escalavel-secrets
+              key: mariadb_username
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: meu-blog-escalavel-secrets
+              key: mariadb_password
+        - name: WORDPRESS_DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: meu-blog-escalavel-configmap
+              key: WORDPRESS_DB_HOST
+        - name: WORDPRESS_DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: meu-blog-escalavel-configmap
+              key: WORDPRESS_DB_PORT
+        - name: WORDPRESS_DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: meu-blog-escalavel-configmap
+              key: WORDPRESS_DB_NAME
+        ports:
+        - containerPort: 80

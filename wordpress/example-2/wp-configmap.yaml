@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: meu-blog-escalavel-configmap
+data:
+  WORDPRESS_DB_HOST: "mariadb-service"
+  WORDPRESS_DB_PORT: "3306"
+  WORDPRESS_DB_NAME: "wp-k8s"

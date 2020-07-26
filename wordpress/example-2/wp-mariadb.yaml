@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-wp
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-wp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-wp
+    spec:
+      containers:
+      - name: mariadb-wp
+        image: rtancman/mariadb-local
+        imagePullPolicy: "Always"
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: meu-blog-escalavel-secrets
+              key: mariadb_username
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: meu-blog-escalavel-secrets
+              key: mariadb_password
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: meu-blog-escalavel-secrets
+              key: mariadb_root_password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: meu-blog-escalavel-configmap
+              key: WORDPRESS_DB_NAME
+        ports:
+        - containerPort: 3306
+          name: mariadb-wp
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mariadb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mariadb-pv-claim

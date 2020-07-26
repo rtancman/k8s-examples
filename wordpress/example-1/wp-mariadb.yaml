@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb-wp
+spec:
+  selector:
+    matchLabels:
+      app: mariadb-wp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb-wp
+    spec:
+      containers:
+      - name: mariadb-wp
+        image: rtancman/mariadb-local
+        imagePullPolicy: "Always"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: adminroot
+        - name: MYSQL_USER
+          value: wp-user
+        - name: MYSQL_PASSWORD
+          value: q1w2e3r4
+        - name: MYSQL_DATABASE
+          value: wp-k8s
+        ports:
+        - containerPort: 3306
+          name: mariadb-wp
